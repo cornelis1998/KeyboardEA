@@ -37,11 +37,11 @@ from permutationsga.problem import (
 from permutationsga.tsp import TSP
 from permutationsga.qap import QAP, read_qaplib
 
-def setup_ga(seed: int):
+def setup_ga(seed: int, inst):
     # TSP
     # problem_base = TSP(tsp.parse(gzip.open("./instances/tsp/berlin52.tsp.gz").read().decode('utf8')))
     # QAP
-    problem_base = QAP(*read_qaplib("./instances/qap/bur26a.dat"))
+    problem_base = QAP(*read_qaplib(f"./instances/qap/bur26{inst}.dat"))
 
     problem = problem_base
 
@@ -52,7 +52,14 @@ def setup_ga(seed: int):
     problem = problem_decoder
 
     # Add the tracker
-    value_to_reach = 5426670 # see bur26a.sln
+    value_to_reach_dict = {'a': 5426670, 'b': 3817852, 'c': 5426795, 'd': 3821225}
+    value_to_reach = value_to_reach_dict[inst]
+    # value_to_reach = 5426670 # see bur26a.sln
+    # value_to_reach = 3817852 # see bur26b.sln
+    # value_to_reach = 5426795 # see bur26c.sln
+    # value_to_reach = 3821225 # see bur26d.sln
+    
+
     problem_tracker = ElitistTracker(problem, value_to_reach)
     problem = problem_tracker
 
@@ -85,18 +92,21 @@ def setup_ga(seed: int):
 
     return problem_tracker, ga
 
-dfs = []
-for seed in tqdm(range(42, 42+10)):
-    tracker, ga = setup_ga(seed)
-    # run a few generations
-    for _ in tqdm(range(50), leave=False):
-        ga.generation()
-    # copy the elitist run data
-    run_data = tracker.elitist_history.copy()
-    # append metadata (e.g. seed, configuration, ..., anything that makes a run unique)
-    run_data["seed"] = seed
+instances = ['a', 'b', 'c', 'd']
 
-    dfs.append(run_data)
+for inst in instances:
+    dfs = []
+    for seed in tqdm(range(42, 42+10)):
+        tracker, ga = setup_ga(seed, inst)
+        # run a few generations
+        for _ in tqdm(range(50), leave=False):
+            ga.generation()
+        # copy the elitist run data
+        run_data = tracker.elitist_history.copy()
+        # append metadata (e.g. seed, configuration, ..., anything that makes a run unique)
+        run_data["seed"] = seed
 
-pd.concat(dfs).to_csv("example_experiment_data.csv.gz", index=False)
+        dfs.append(run_data)
+
+    pd.concat(dfs).to_csv(f"example_experiment_data_{inst}.csv.gz", index=False)
 
