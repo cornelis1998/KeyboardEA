@@ -53,12 +53,7 @@ def setup_ga(seed: int, inst):
 
     # Add the tracker
     value_to_reach_dict = {'a': 5426670, 'b': 3817852, 'c': 5426795, 'd': 3821225}
-    value_to_reach = value_to_reach_dict[inst]
-    # value_to_reach = 5426670 # see bur26a.sln
-    # value_to_reach = 3817852 # see bur26b.sln
-    # value_to_reach = 5426795 # see bur26c.sln
-    # value_to_reach = 3821225 # see bur26d.sln
-    
+    value_to_reach = value_to_reach_dict[inst]    
 
     problem_tracker = ElitistTracker(problem, value_to_reach)
     problem = problem_tracker
@@ -92,7 +87,7 @@ def setup_ga(seed: int, inst):
 
     return problem_tracker, ga
 
-instances = ['a', 'b', 'c', 'd']
+instances = ['d']
 
 for inst in instances:
     dfs = []
@@ -108,5 +103,5 @@ for inst in instances:
 
         dfs.append(run_data)
 
-    pd.concat(dfs).to_csv(f"example_experiment_data_{inst}.csv.gz", index=False)
+    pd.concat(dfs).to_csv(f"Results\example_experiment_data_{inst}.csv.gz", index=False)
 
