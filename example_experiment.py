@@ -46,19 +46,27 @@ def setup_ga(seed: int):
     problem = problem_base
 
     # Add the decoder - permutation encoding
-    problem_decoder = IdenticalDecoder(problem)   # Identity, if using the permutation directly
-    # problem_decoder = InvPermDecoder(problem)     # Inverse, if you want to reverse the direction in which the mapping occurs
+    # problem_decoder = IdenticalDecoder(problem)   # Identity, if using the permutation directly
+    problem_decoder = InvPermDecoder(problem)     # Inverse, if you want to reverse the direction in which the mapping occurs
 
     problem = problem_decoder
 
     # Add the tracker
     value_to_reach = 5426670 # see bur26a.sln
+    # value_to_reach = 3817852 # bur26b
+    # value_to_reach = 5426795 # bur26c
+    # value_to_reach = 3821225 # bur26d
+    # value_to_reach = 5386879 # bur26e
+    # value_to_reach = 3782044 # bur26f
+    # value_to_reach = 10117172 # bur26g
+    # value_to_reach = 7098658 # bur26h
+
     problem_tracker = ElitistTracker(problem, value_to_reach)
     problem = problem_tracker
 
     # GA - Permutation
     # seed = 42 -- is an argument to this function now
-    population_size = 2**10
+    population_size = 2**12
     rng = np.random.default_rng(seed=seed + 1)
     l = problem.get_length()
 
@@ -66,8 +74,8 @@ def setup_ga(seed: int):
     # crossover_fn = crossover_pmx; indices_gen = lambda: generate_sequential_indices(rng, l)
     # crossover_fn = crossover_pmx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
     # crossover_fn = crossover_ox; indices_gen = lambda: generate_sequential_indices(rng, l)
-    # crossover_fn = crossover_cx; indices_gen = lambda: rng.integers(0, l - 1, size=1)
-    crossover_fn = crossover_cx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.05)
+    crossover_fn = crossover_cx; indices_gen = lambda: rng.integers(0, l - 1, size=1)
+    # crossover_fn = crossover_cx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.05)
 
     initialization = RandomPermutationInitialization(l)
     parent_selection = SequentialSelector()
