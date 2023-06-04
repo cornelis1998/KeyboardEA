@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 # PLot results
 data = pd.read_csv("example_experiment_data.csv.gz")
+print(data)
 
 # First, determine the configurations
 aggregating_columns = ["seed"]
