@@ -57,7 +57,7 @@ def setup_ga(seed: int, hyperparameters):
     problem = problem_tracker
 
     # GA - Permutation
-    population_size = 2**10 #TODO: make hyperparameter
+    population_size = 2**hyperparameters["population_size"]
     rng = np.random.default_rng(seed=seed + 1)
     l = problem.get_length()
 
