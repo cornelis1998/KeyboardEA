@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # PLot results
-data = pd.read_csv("example_experiment_data_b.csv.gz")
+data = pd.read_csv("Results\example_experiment_data_a.csv.gz")
 
 # First, determine the configurations
 aggregating_columns = ["seed"]

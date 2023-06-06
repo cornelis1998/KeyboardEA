@@ -10,8 +10,6 @@ import pandas as pd
 # This library supports the various instances from TSPLIB (from coordinates to fully explicit matrices)
 import tsplib95 as tsp
 
-
-
 from permutationsga.ga import (
     ConfigurableGA,
     RandomPermutationInitialization,
@@ -33,6 +31,8 @@ from permutationsga.problem import (
     RandomKeysDecoder,
     ElitistTracker,
 )
+
+from improved_functions import *
 
 from permutationsga.tsp import TSP
 from permutationsga.qap import QAP, read_qaplib
@@ -67,9 +67,12 @@ def setup_ga(seed: int, inst):
 
     # crossover_fn = crossover_pmx; indices_gen = lambda: generate_sequential_indices(rng, l)
     # crossover_fn = crossover_pmx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
-    # crossover_fn = crossover_ox; indices_gen = lambda: generate_sequential_indices(rng, l)
-    # crossover_fn = crossover_cx; indices_gen = lambda: rng.integers(0, l - 1, size=1)
-    crossover_fn = crossover_cx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.05)
+    crossover_fn = crossover_pmx_Tom; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
+    # crossover_fn = crossover_pmx_Tom; indices_gen = lambda: generate_sequential_indices(rng, l)
+
+    # mutation_fn = swap_mutation
+    # mutation_fn = scramble_mutation
+    mutation_fn = insertion_mutation
 
     initialization = RandomPermutationInitialization(l)
     parent_selection = SequentialSelector()
@@ -82,12 +85,12 @@ def setup_ga(seed: int, inst):
     )
     selection = TournamentSelection()
     ga = ConfigurableGA(
-        seed, population_size, problem, initialization, recombinator, selection
+        seed, population_size, problem, initialization, recombinator, selection, mutation_fn
     )
 
     return problem_tracker, ga
 
-instances = ['d']
+instances = ['a']
 
 for inst in instances:
     dfs = []
