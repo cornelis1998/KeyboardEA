@@ -452,7 +452,8 @@ class ConfigurableGA:
         initialization: Initialization,
         recombinator: Recombinator,
         selection: Selection,
-        mutation_fn
+        mutation_fn,
+        mutation_rate: float = 0.1,
     ):
         # Create solution containers
         self.population = [Solution(None) for _ in range(population_size)]
@@ -467,6 +468,7 @@ class ConfigurableGA:
         self.initialized = False
 
         self.mutation_fn = mutation_fn
+        self.mutation_rate = mutation_rate
 
     def initialize(self):
         # Use initializer to set solution values
@@ -480,7 +482,7 @@ class ConfigurableGA:
         offspring = self.recombinator.recombine(self.rng, self.population)
         for solution in offspring:
             if self.mutation_fn is not None:
-                solution = self.mutation_fn(solution, 0.1)
+                solution = self.mutation_fn(solution, self.mutation_rate)
             self.problem.evaluate(solution)
 
         self.population = self.selection.select(self.rng, offspring, len(self.population))

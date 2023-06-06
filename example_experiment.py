@@ -37,7 +37,7 @@ from improved_functions import *
 from permutationsga.tsp import TSP
 from permutationsga.qap import QAP, read_qaplib
 
-NUM_ITERATIONS = 10
+NUM_ITERATIONS = 5
 
 
 def setup_ga(seed: int, hyperparameters):
@@ -62,7 +62,7 @@ def setup_ga(seed: int, hyperparameters):
     rng = np.random.default_rng(seed=seed + 1)
     l = problem.get_length()
 
-    p = hyperparameters["mutation_rate"]
+    p = hyperparameters["crossover_rate"]
     method = hyperparameters["crossover_fn"]
 
     if method == "ox":
@@ -76,28 +76,36 @@ def setup_ga(seed: int, hyperparameters):
         indices_gen = lambda: generate_uniform_indices(rng, l, p)
 
     ## Choose mutation function
-    # mutation_fn = swap_mutation
-    # mutation_fn = scramble_mutation
-    # mutation_fn = insertion_mutation
-    mutation_fn = None
+    mutationMethod = hyperparameters["mutation_fn"]
+    if mutationMethod == "swap":
+        mutation_fn = swap_mutation
+    elif mutationMethod == "scramble":
+        mutation_fn = scramble_mutation
+    elif mutationMethod == "insertion":
+        mutation_fn = insertion_mutation
+    elif mutationMethod == "none":
+        mutation_fn = None
 
     initialization = RandomPermutationInitialization(l)
-    parent_selection = SequentialSelector()
-    recombinator = FunctionBasedRecombinator(
-        indices_gen,
-        crossover_fn,
-        parent_selection,
-        population_size * 2, # Note: double as we are including the previous population
-        include_what="population"
-    )
 
     selectionMethod = hyperparameters["selection"]
     if selectionMethod == "tournament":
         selection = TournamentSelection()
     elif selectionMethod == "sequential":
         selection = SequentialSelector()
+
+    recombinator = FunctionBasedRecombinator(
+        indices_gen,
+        crossover_fn,
+        selection,
+        population_size * 2, # Note: double as we are including the previous population
+        include_what="population"
+    )
+
+    mutation_rate = hyperparameters["mutation_rate"]
+
     ga = ConfigurableGA(
-        seed, population_size, problem, initialization, recombinator, selection, mutation_fn
+        seed, population_size, problem, initialization, recombinator, selection, mutation_fn, mutation_rate
     )
 
     return problem_tracker, ga
