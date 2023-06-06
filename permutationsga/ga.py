@@ -7,7 +7,7 @@ from typing import List, Union
 import numpy.typing as npt
 
 from .problem import Problem, Solution
-
+from improved_functions import *
 
 class Initialization:
     def initialize(self, rng: np.random.Generator, population: List[Solution]):
@@ -401,6 +401,7 @@ def crossover_ox(indices, s0: Solution, s1: Solution):
     not_indices = list(set(range(len(s1.e))) - set(indices))
     return crossover_ox_neg(not_indices, s0, s1)
 
+
 class FunctionBasedRecombinator(Recombinator):
     """
     A simple recombinator that utilizes a particular function to create new individuals
@@ -431,9 +432,14 @@ class FunctionBasedRecombinator(Recombinator):
             parents = self.parent_selection.select(rng, population, 2)
             if self.include_what == "parents":
                 offspring += parents
-            offspring += self.crossover_function(
-                self.indices_function(), parents[0], parents[1]
-            )
+            if self.indices_function is not None:
+                offspring += self.crossover_function(
+                    self.indices_function(), parents[0], parents[1]
+                )
+            else:
+                offspring += self.crossover_function(
+                    parents[0], parents[1]
+                )
         return offspring
 
 
@@ -446,6 +452,7 @@ class ConfigurableGA:
         initialization: Initialization,
         recombinator: Recombinator,
         selection: Selection,
+        mutation_fn
     ):
         # Create solution containers
         self.population = [Solution(None) for _ in range(population_size)]
@@ -459,6 +466,8 @@ class ConfigurableGA:
         # We have not yet initialized the population - should occur upon first generation
         self.initialized = False
 
+        self.mutation_fn = mutation_fn
+
     def initialize(self):
         # Use initializer to set solution values
         self.initialization.initialize(self.rng, self.population)
@@ -470,7 +479,10 @@ class ConfigurableGA:
         # Create offspring (potentially)
         offspring = self.recombinator.recombine(self.rng, self.population)
         for solution in offspring:
+            if self.mutation_fn is not None:
+                solution = self.mutation_fn(solution, 0.1)
             self.problem.evaluate(solution)
+
         self.population = self.selection.select(self.rng, offspring, len(self.population))
 
     def generation(self):
@@ -481,3 +493,9 @@ class ConfigurableGA:
         else:
             # Perform normal generation
             self.create_offspring_and_select()
+
+
+import numpy as np
+
+
+

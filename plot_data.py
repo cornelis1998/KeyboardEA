@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 # PLot results
 data = pd.read_csv("example_experiment_data.csv.gz")
-print(data)
 
 # First, determine the configurations
 aggregating_columns = ["seed"]
@@ -19,7 +18,9 @@ unique_evaluations = pd.DataFrame({'#evaluations': data["#evaluations"].sort_val
 requested_samples = pd.merge(unique_configurations, unique_evaluations, how="cross")
 resampled_data = pd.merge(requested_samples, data, how="left", on=aggregating_columns + ["#evaluations"]).ffill()
 
-print(min(resampled_data.fitness))
+# print(f'Starting fitness: {max(resampled_data.fitness)}\n Minimal fitness: {min(resampled_data.fitness)})
+print(f'Starting fitness: {resampled_data["fitness"].max()}\nMinimal fitness: {resampled_data["fitness"].min()}')
+
 
 sns.lineplot(data=resampled_data, x="#evaluations", y="fitness", errorbar=("pi", 95))
 plt.show()

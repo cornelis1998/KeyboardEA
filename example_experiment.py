@@ -1,6 +1,6 @@
 # Imports
 import gzip  # as some instance files may have been compressed
-from tqdm import tqdm  # progress bar
+from tqdm import tqdm # progress bar
 
 # Re-import dependencies (in case earlier import was skipped)
 import numpy as np
@@ -10,7 +10,6 @@ import pandas as pd
 # This library supports the various instances from TSPLIB (from coordinates to fully explicit matrices)
 import tsplib95 as tsp
 import wandb
-
 from permutationsga.ga import (
     ConfigurableGA,
     RandomPermutationInitialization,
@@ -33,6 +32,8 @@ from permutationsga.problem import (
     ElitistTracker,
 )
 
+from improved_functions import *
+
 from permutationsga.tsp import TSP
 from permutationsga.qap import QAP, read_qaplib
 
@@ -46,13 +47,13 @@ def setup_ga(seed: int, hyperparameters):
     problem = problem_base
 
     # Add the decoder - permutation encoding
-    problem_decoder = IdenticalDecoder(problem)  # Identity, if using the permutation directly
+    problem_decoder = IdenticalDecoder(problem)   # Identity, if using the permutation directly
     # problem_decoder = InvPermDecoder(problem)     # Inverse, if you want to reverse the direction in which the mapping occurs
 
     problem = problem_decoder
 
     # Add the tracker
-    value_to_reach = 5426670  # see bur26a.sln
+    value_to_reach = 5426670 # see bur26a.sln
     problem_tracker = ElitistTracker(problem, value_to_reach)
     problem = problem_tracker
 
@@ -74,13 +75,19 @@ def setup_ga(seed: int, hyperparameters):
         crossover_fn = crossover_cx;
         indices_gen = lambda: generate_uniform_indices(rng, l, p)
 
+    ## Choose mutation function
+    # mutation_fn = swap_mutation
+    # mutation_fn = scramble_mutation
+    # mutation_fn = insertion_mutation
+    mutation_fn = None
+
     initialization = RandomPermutationInitialization(l)
     parent_selection = SequentialSelector()
     recombinator = FunctionBasedRecombinator(
         indices_gen,
         crossover_fn,
         parent_selection,
-        population_size * 2,  # Note: double as we are including the previous population
+        population_size * 2, # Note: double as we are including the previous population
         include_what="population"
     )
 
@@ -90,7 +97,7 @@ def setup_ga(seed: int, hyperparameters):
     elif selectionMethod == "sequential":
         selection = SequentialSelector()
     ga = ConfigurableGA(
-        seed, population_size, problem, initialization, recombinator, selection
+        seed, population_size, problem, initialization, recombinator, selection, mutation_fn
     )
 
     return problem_tracker, ga
