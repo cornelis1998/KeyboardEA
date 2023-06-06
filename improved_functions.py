@@ -32,17 +32,23 @@ def crossover_pmx_Tom(indices, s0: Solution, s1: Solution):
 
     return [Solution(off)]
 
-def crossover_pmx_Tom_lmr(indices, s0: Solution, s1: Solution):
+def crossover_pmx_Tom_lmr(s0: Solution, s1: Solution):
     assert s0.e is not None, "Ensure solution s0 is initialized before use."
     assert s1.e is not None, "Ensure solution s1 is initialized before use."
 
     # Define the keyboard layout as a list for easy indexing.
     keyboard_layout = list('QWERTYUIOPASDFGHJKLZXCVBNM')
 
-    # Define the sections.
-    left_keys = list('QWERASDFZXCV')
-    middle_keys = list('TYGHBN')
-    right_keys = list('UIOPJKLM')
+    ## Choose section divider
+    # Define the sections left-middle-right.
+    # left_keys = list('QWERASDFZXCV')
+    # middle_keys = list('TYGHBN')
+    # right_keys = list('UIOPJKLM')
+
+    # Define the sections toprow-middlerow-bottomrow
+    left_keys = list('QWERTYUIOP')
+    middle_keys = list('ASDFGHJKL')
+    right_keys = list('ZXCVBNM')
 
     # Use list comprehension to create the sections based on the indices in the keyboard layout.
     left_section = np.array([keyboard_layout.index(key) for key in left_keys])
@@ -93,8 +99,6 @@ def swap_mutation(s0: Solution, mutation_probability):
         mutated_layout[idx1], mutated_layout[idx2] = s0.e[idx2], s0.e[idx1]
 
     return Solution(mutated_layout)
-
-import numpy as np
 
 def scramble_mutation(s0: Solution, mutation_probability):
     mutated_layout = np.copy(s0.e)

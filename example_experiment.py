@@ -64,14 +64,12 @@ def setup_ga(seed: int, inst):
     rng = np.random.default_rng(seed=seed + 1)
     l = problem.get_length()
 
-
-    # crossover_fn = crossover_pmx; indices_gen = lambda: generate_sequential_indices(rng, l)
+    ## Choose crossover function
     # crossover_fn = crossover_pmx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
     # crossover_fn = crossover_pmx_Tom; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
-    # crossover_fn = crossover_pmx_Tom; indices_gen = lambda: generate_sequential_indices(rng, l)
-    crossover_fn = crossover_pmx_Tom_lmr; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
+    crossover_fn = crossover_pmx_Tom_lmr; indices_gen = None
 
-
+    ## Choose mutation function
     # mutation_fn = swap_mutation
     # mutation_fn = scramble_mutation
     # mutation_fn = insertion_mutation

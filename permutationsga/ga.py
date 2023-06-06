@@ -432,9 +432,14 @@ class FunctionBasedRecombinator(Recombinator):
             parents = self.parent_selection.select(rng, population, 2)
             if self.include_what == "parents":
                 offspring += parents
-            offspring += self.crossover_function(
-                self.indices_function(), parents[0], parents[1]
-            )
+            if self.indices_function is not None:
+                offspring += self.crossover_function(
+                    self.indices_function(), parents[0], parents[1]
+                )
+            else:
+                offspring += self.crossover_function(
+                    parents[0], parents[1]
+                )
         return offspring
 
 
