@@ -72,9 +72,10 @@ def setup_ga(seed: int, inst):
 
     # mutation_fn = swap_mutation
     # mutation_fn = scramble_mutation
-    mutation_fn = insertion_mutation
+    # mutation_fn = insertion_mutation
+    mutation_fn = None
 
-    initialization = RandomPermutationInitialization(l)
+    initialization = RandomPermutationInitialization(l) 
     parent_selection = SequentialSelector()
     recombinator = FunctionBasedRecombinator(
         indices_gen,

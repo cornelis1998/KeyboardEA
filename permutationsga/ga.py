@@ -474,7 +474,8 @@ class ConfigurableGA:
         # Create offspring (potentially)
         offspring = self.recombinator.recombine(self.rng, self.population)
         for solution in offspring:
-            solution = self.mutation_fn(solution, 0.1)
+            if self.mutation_fn is not None:
+                solution = self.mutation_fn(solution, 0.1)
             self.problem.evaluate(solution)
 
         self.population = self.selection.select(self.rng, offspring, len(self.population))
