@@ -25,6 +25,7 @@ from permutationsga.ga import (
     generate_sequential_indices,
     generate_sequential_wrapping_indices,
     RandomUniformInitialization,
+    BetterPermutationInitialization,
     DifferentialEvolutionRecombinator,
 )
 from permutationsga.problem import (
@@ -69,7 +70,8 @@ def setup_ga(seed: int):
     # crossover_fn = crossover_cx; indices_gen = lambda: rng.integers(0, l - 1, size=1)
     crossover_fn = crossover_cx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.05)
 
-    initialization = RandomPermutationInitialization(l)
+    # initialization = RandomPermutationInitialization(l)
+    initialization = BetterPermutationInitialization(l, problem_base)
     parent_selection = SequentialSelector()
     recombinator = FunctionBasedRecombinator(
         indices_gen,

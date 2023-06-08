@@ -6,6 +6,9 @@ import numpy as np
 from typing import List, Union
 import numpy.typing as npt
 
+from permutationsga.problem import Solution
+from permutationsga.qap import QAP
+
 from .problem import Problem, Solution
 
 
@@ -38,8 +41,40 @@ class RandomPermutationInitialization(Initialization):
         self.length = length
 
     def initialize(self, rng: np.random.Generator, population: List[Solution]):
+        
         for solution in population:
             solution.e = rng.permutation(self.length)
+
+
+
+class BetterPermutationInitialization(Initialization):
+    """
+    Put the most used keys under 11, 12, 13, 14, 17, 18, 19 (with index 10, ..., 18)
+    """
+
+    def __init__(self, length: int, problem: QAP):
+        self.length = length
+        
+        usage_matrix = problem.B
+        self.usage_per_letter = np.sum(usage_matrix, axis=0)
+
+    def initialize(self, rng: np.random.Generator, population: List[Solution]):
+
+        letter_indices_sorted = np.argsort(self.usage_per_letter)
+        least_used = letter_indices_sorted[:17]
+        most_used = letter_indices_sorted[17:]
+
+        for solution in population:
+            # Shuffle both lists
+            np.random.shuffle(least_used)
+            np.random.shuffle(most_used)
+            sol = np.concatenate([
+                least_used[:10], 
+                most_used, 
+                least_used[10:],
+                ])
+            solution.e = sol
+
 
 
 class Selection:
