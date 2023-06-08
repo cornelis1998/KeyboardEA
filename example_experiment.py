@@ -23,7 +23,7 @@ from permutationsga.ga import (
     generate_sequential_indices,
     generate_sequential_wrapping_indices,
     RandomUniformInitialization,
-    DifferentialEvolutionRecombinator,
+    DifferentialEvolutionRecombinator, QWERTYRandom, AZERTYRandom, DvorakRandom, ColemakRandom,
 )
 from permutationsga.problem import (
     IdenticalDecoder,
@@ -62,6 +62,21 @@ def setup_ga(seed: int, hyperparameters):
     rng = np.random.default_rng(seed=seed + 1)
     l = problem.get_length()
 
+    # Choose initialization method
+    initializationMethod = hyperparameters["initialization_method"]
+    initializationProb = hyperparameters["initialization_prob"]
+    if initializationMethod == "randomPermutation":
+        initialization = RandomPermutationInitialization(l)
+    elif initializationMethod == "qwertyR":
+        initialization = QWERTYRandom(l, initializationProb)
+    elif initializationMethod == "azertyR":
+        initialization = AZERTYRandom(l, initializationProb)
+    elif initializationMethod == "colemakR":
+        initialization = ColemakRandom(l, initializationProb)
+    elif initializationMethod == "dvorakR":
+        initialization = DvorakRandom(l, initializationProb)
+
+    ## Choose crossover function and probability
     p = hyperparameters["crossover_rate"]
     method = hyperparameters["crossover_fn"]
 
@@ -74,6 +89,12 @@ def setup_ga(seed: int, hyperparameters):
     elif method == "cx":
         crossover_fn = crossover_cx;
         indices_gen = lambda: generate_uniform_indices(rng, l, p)
+    elif method == "pmx_tom":
+        crossover_fn = crossover_pmx_Tom;
+        indices_gen = lambda: generate_uniform_indices(rng, l, p)
+    elif method == "pmx_lmr":
+        crossover_fn = crossover_pmx_Tom_lmr;
+        indices_gen = lambda: generate_uniform_indices(rng, l, p) # is ignored
 
     ## Choose mutation function
     mutationMethod = hyperparameters["mutation_fn"]
@@ -86,8 +107,7 @@ def setup_ga(seed: int, hyperparameters):
     elif mutationMethod == "none":
         mutation_fn = None
 
-    initialization = RandomPermutationInitialization(l)
-
+    # Choose selection method
     selectionMethod = hyperparameters["selection"]
     if selectionMethod == "tournament":
         selection = TournamentSelection()
@@ -116,18 +136,27 @@ def train():
     hyperparameters = run.config
 
     num_gens = hyperparameters["num_generations"]
-    dfs = []
+    runs = []
     for seed in tqdm(range(42, 42 + NUM_ITERATIONS)):
         tracker, ga = setup_ga(seed, hyperparameters)
+        run = []
+        best = float('inf')
 
         for _ in tqdm(range(num_gens), leave=False):
+            if len(ga.population) != 2**hyperparameters["population_size"]:
+                raise ValueError("Population size is incorrect")
             ga.generation()
 
-        run_data = tracker.elitist_history.copy()
-        run_data["seed"] = seed
-        dfs.append(run_data)
+            run.append(tracker.current_elitist.f)
+
+        runs.append(run)
+
 
     # get min, max, mean, std of fitness at each generation
+    for run in runs:
+        print("len(run): ", len(run))
+
+
     for gen in range(num_gens):
         min_fitness = float('inf')
         max_fitness = float('-inf')
@@ -135,10 +164,10 @@ def train():
         fitness_values = []
 
         # iterate through all dfs
-        for df in dfs:
-            if gen < len(df["fitness"]):
-                fitness = df["fitness"].iloc[gen]
-                print(fitness)
+        for run in runs:
+
+            if gen < len(run):
+                fitness = run[gen]
                 min_fitness = min(min_fitness, fitness)
                 max_fitness = max(max_fitness, fitness)
                 total_fitness += fitness

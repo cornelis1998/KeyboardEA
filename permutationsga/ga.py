@@ -8,7 +8,6 @@ import numpy.typing as npt
 
 from .problem import Problem, Solution
 from improved_functions import *
-
 class Initialization:
     def initialize(self, rng: np.random.Generator, population: List[Solution]):
         raise NotImplementedError()
@@ -41,6 +40,117 @@ class RandomPermutationInitialization(Initialization):
         for solution in population:
             solution.e = rng.permutation(self.length)
 
+class QWERTYRandom(Initialization):
+    def __init__(self, length: int, prob: float = 0.5):
+        self.length = length
+        self.prob = prob
+
+    def initialize(self, rng: np.random.Generator, population: List[Solution]):
+        for solution in population:
+            solution.e = self.QWERTY(rng)
+
+    def QWERTY(self, rng: np.random.Generator):
+        qwerty = "QWERTYUIOPASDFGHJKLZXCVBNM"
+
+        letterpos = {i: letter for i, letter in enumerate(qwerty)}
+        letterinv = {letter: i for i, letter in enumerate(qwerty)}
+
+        sol = rng.permutation(self.length)
+        for i in range(26):
+            # if random < prob, swap letter at index with its correct letter
+            if rng.uniform(0,1) < self.prob:
+                target = letterinv[letterpos[i]]
+                sol[i], sol[target] = sol[target], sol[i]
+
+        letters, counts = np.unique(sol, return_counts=True)
+        assert(len(letters) == 26)
+        assert(np.all(counts == 1))
+
+        return sol
+
+class AZERTYRandom(Initialization):
+    def __init__(self, length: int, prob: float = 0.5):
+        self.length = length
+        self.prob = prob
+
+    def initialize(self, rng: np.random.Generator, population: List[Solution]):
+        for solution in population:
+            solution.e = self.AZERTY(rng)
+
+    def AZERTY(self, rng: np.random.Generator):
+        qwerty = "AZERTYUIOPQSDFGHJKLMWXCVBN"
+
+        letterpos = {i: letter for i, letter in enumerate(qwerty)}
+        letterinv = {letter: i for i, letter in enumerate(qwerty)}
+
+        sol = rng.permutation(self.length)
+        for i in range(26):
+            # if random < prob, swap letter at index with its correct letter
+            if rng.uniform(0,1) < self.prob:
+                target = letterinv[letterpos[i]]
+                sol[i], sol[target] = sol[target], sol[i]
+
+        letters, counts = np.unique(sol, return_counts=True)
+        assert(len(letters) == 26)
+        assert(np.all(counts == 1))
+
+        return sol
+
+class ColemakRandom(Initialization):
+    def __init__(self, length: int, prob: float = 0.5):
+        self.length = length
+        self.prob = prob
+
+    def initialize(self, rng: np.random.Generator, population: List[Solution]):
+        for solution in population:
+            solution.e = self.Colemak(rng)
+
+    def Colemak(self, rng: np.random.Generator):
+        qwerty = "QWFPGJLUYARSTDHNEIOZXCVBKM"
+
+        letterpos = {i: letter for i, letter in enumerate(qwerty)}
+        letterinv = {letter: i for i, letter in enumerate(qwerty)}
+
+        sol = rng.permutation(self.length)
+        for i in range(26):
+            # if random < prob, swap letter at index with its correct letter
+            if rng.uniform(0,1) < self.prob:
+                target = letterinv[letterpos[i]]
+                sol[i], sol[target] = sol[target], sol[i]
+
+        letters, counts = np.unique(sol, return_counts=True)
+        assert(len(letters) == 26)
+        assert(np.all(counts == 1))
+
+        return sol
+
+class DvorakRandom(Initialization):
+    def __init__(self, length: int, prob: float = 0.5):
+        self.length = length
+        self.prob = prob
+
+    def initialize(self, rng: np.random.Generator, population: List[Solution]):
+        for solution in population:
+            solution.e = self.Dvorak(rng)
+
+    def Dvorak(self, rng: np.random.Generator):
+        qwerty = "PYFGCRLAOEUIDHTNSQJKXBMWVZ"
+
+        letterpos = {i: letter for i, letter in enumerate(qwerty)}
+        letterinv = {letter: i for i, letter in enumerate(qwerty)}
+
+        sol = rng.permutation(self.length)
+        for i in range(26):
+            # if random < prob, swap letter at index with its correct letter
+            if rng.uniform(0,1) < self.prob:
+                target = letterinv[letterpos[i]]
+                sol[i], sol[target] = sol[target], sol[i]
+
+        letters, counts = np.unique(sol, return_counts=True)
+        assert(len(letters) == 26)
+        assert(np.all(counts == 1))
+
+        return sol
 
 class Selection:
     def select(
@@ -496,8 +606,11 @@ class ConfigurableGA:
             # Perform normal generation
             self.create_offspring_and_select()
 
+    def get_best_fitness(self):
+        self.population.sort(key=lambda x: x.f)
+        return self.population[0].f
 
-import numpy as np
+
 
 
 

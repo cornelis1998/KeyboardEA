@@ -32,7 +32,7 @@ def crossover_pmx_Tom(indices, s0: Solution, s1: Solution):
 
     return [Solution(off)]
 
-def crossover_pmx_Tom_lmr(s0: Solution, s1: Solution):
+def crossover_pmx_Tom_lmr(indices, s0: Solution, s1: Solution):
     assert s0.e is not None, "Ensure solution s0 is initialized before use."
     assert s1.e is not None, "Ensure solution s1 is initialized before use."
 

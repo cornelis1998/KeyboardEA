@@ -1,6 +1,6 @@
 project: "Keyboard assignment"
 program: "example_experiment.py"
-name: "Bigger sweep v3"
+name: "QWERTY test"
 method: bayes
 metric:
   name: min_fitness
