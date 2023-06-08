@@ -23,6 +23,8 @@ from permutationsga.ga import (
     generate_sequential_indices,
     generate_sequential_wrapping_indices,
     RandomUniformInitialization,
+    BetterPermutationInitialization,
+    DifferentialEvolutionRecombinator,
     DifferentialEvolutionRecombinator, QWERTYRandom, AZERTYRandom, DvorakRandom, ColemakRandom,
 )
 from permutationsga.problem import (
@@ -75,6 +77,8 @@ def setup_ga(seed: int, hyperparameters):
         initialization = ColemakRandom(l, initializationProb)
     elif initializationMethod == "dvorakR":
         initialization = DvorakRandom(l, initializationProb)
+
+    initialization = BetterPermutationInitialization(l, problem_base)
 
     ## Choose crossover function and probability
     p = hyperparameters["crossover_rate"]
