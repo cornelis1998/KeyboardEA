@@ -6,6 +6,9 @@ import numpy as np
 from typing import List, Union
 import numpy.typing as npt
 
+from permutationsga.problem import Solution
+from permutationsga.qap import QAP
+
 from .problem import Problem, Solution
 
 
@@ -38,8 +41,67 @@ class RandomPermutationInitialization(Initialization):
         self.length = length
 
     def initialize(self, rng: np.random.Generator, population: List[Solution]):
+        
         for solution in population:
             solution.e = rng.permutation(self.length)
+
+
+
+class BetterPermutationInitialization(Initialization):
+    """
+    Put the most used keys under 11, 12, 13, 14, 17, 18, 19 (with index 10, ..., 18)
+    """
+
+    def __init__(self, length: int, problem: QAP):
+        self.length = length
+        
+        usage_matrix = problem.B
+        self.usage_per_letter = np.sum(usage_matrix, axis=0)
+
+    def initialize(self, rng: np.random.Generator, population: List[Solution]):
+
+        letter_indices_sorted = np.argsort(self.usage_per_letter)
+        least_used = letter_indices_sorted[:17]
+        most_used = letter_indices_sorted[17:]
+
+        for solution in population:
+            # Shuffle both lists
+            np.random.shuffle(least_used)
+            np.random.shuffle(most_used)
+            sol = np.concatenate([
+                least_used[:10], 
+                most_used, 
+                least_used[10:],
+                ])
+            solution.e = sol
+            print(sol)
+
+class QwertyPermutationInitialization(Initialization):
+    """
+    initialize population with 10% qwerty, 10% azerty and 80% randomized
+    """
+
+    def __init__(self, length: int):
+        self.length = length
+
+    def initialize(self, rng: np.random.Generator, population: List[Solution]):
+        qwerty = [16, 22, 4, 17, 19, 24, 20, 8, 14, 15, 0, 18, 3, 5, 6, 7, 9, 10, 11, 25, 23, 2, 21, 1, 13, 12]
+        azerty = [0, 25, 4, 17, 19, 24, 20, 8, 14, 15, 16, 18, 3, 5, 6, 7, 9, 10, 11, 12, 22, 23, 2, 21, 1, 13]
+        # colemak = [16, 22, 5, 15, 6, 9, 11, 20, 24, 0, 17, 18, 19, 3, 7, 13, 4, 8, 14, 25, 23, 2, 21, 1, 10, 12]
+        # dvorak = [15, 24, 5, 6, 2, 17, 11, 0, 14, 4, 20, 8, 3, 7, 19, 13, 18, 16, 9, 10, 23, 1, 12, 22, 21, 25]
+        for solution in population:
+            x = np.random.random(size=1)
+            if (x < 0.1):
+                solution.e = qwerty
+            elif (x >= 0.1 and x < 0.2):
+                solution.e = azerty
+            # elif (x >= 0.2 and x < 0.25):
+            #     solution.e = colemak
+            # elif (x >= 0.25 and x < 0.3):
+            #     solution.e = dvorak
+            else:
+                solution.e = rng.permutation(self.length)
+
 
 
 class Selection:
