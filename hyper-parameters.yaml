@@ -1,13 +1,13 @@
 project: "Keyboard assignment"
 program: "example_experiment.py"
-name: "Bigger sweep v3"
+name: "Bigger sweep v4"
 method: bayes
 metric:
   name: min_fitness
   goal: minimize
 parameters:
   initialization_method:
-    values: ['randomPermutation','qwertyR','azertyR', 'colemakR', 'dvorakR']
+    values: ['randomPermutation','qwertyR','azertyR', 'colemakR', 'dvorakR', 'BetterPermutationInitialization']
   initialization_prob:
     values: [0.5,0.4,0.3,0.2,0.1, 0.05, 0.04, 0.03, 0.02, 0.01, 0.005, 0.001]
   population_size:

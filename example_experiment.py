@@ -77,8 +77,8 @@ def setup_ga(seed: int, hyperparameters):
         initialization = ColemakRandom(l, initializationProb)
     elif initializationMethod == "dvorakR":
         initialization = DvorakRandom(l, initializationProb)
-
-    initialization = BetterPermutationInitialization(l, problem_base)
+    elif initializationMethod == "BetterPermutationInitialization":
+        initialization = BetterPermutationInitialization(l, problem_base)
 
     ## Choose crossover function and probability
     p = hyperparameters["crossover_rate"]
