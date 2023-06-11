@@ -6,6 +6,7 @@ from tqdm import tqdm # progress bar
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import random
 
 # This library supports the various instances from TSPLIB (from coordinates to fully explicit matrices)
 import tsplib95 as tsp
@@ -65,9 +66,10 @@ def setup_ga(seed: int, inst):
     l = problem.get_length()
 
     ## Choose crossover function
-    # crossover_fn = crossover_pmx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
+    # crossover_fn = crossover_pmx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.2)
     # crossover_fn = crossover_pmx_Tom; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
-    crossover_fn = crossover_pmx_Tom_lmr; indices_gen = None
+    # crossover_fn = crossover_pmx_Tom_lmr; indices_gen = None
+    crossover_fn = crossover_pmx_Tom_adjusted_chance; indices_gen= None
 
     ## Choose mutation function
     # mutation_fn = swap_mutation
