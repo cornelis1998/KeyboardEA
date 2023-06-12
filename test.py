@@ -1,7 +1,15 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import string
+import numpy as np
 
 def visualize_keyboard(solution):
+    alphabet_array = list(string.ascii_uppercase)
+    rearranged = np.full(solution.size, None)
+
+    for i in range(len(solution)):
+        rearranged[i] = alphabet_array[solution[i]]
+
     # Rows based on QWERTY keyboard
     row_indices = [[0, 9], [10, 18], [19, 25]]
     
@@ -10,7 +18,7 @@ def visualize_keyboard(solution):
     # Loop through rows
     for row_number, (row_start, row_end) in enumerate(row_indices):
         for idx in range(row_start, row_end + 1):
-            key = solution[idx]
+            key = rearranged[idx]
             
             # Compute x position
             x = (idx - row_start) + 0.5 * row_number
@@ -33,5 +41,6 @@ def visualize_keyboard(solution):
     
     plt.show()
 
-keyboard_layout = list("QWERTYUIOPASDFGHJKLZXCVBNM")
+keyboard_layout = np.array([1,0,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25])
+
 visualize_keyboard(keyboard_layout)

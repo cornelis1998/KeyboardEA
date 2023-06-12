@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import string
 
 from permutationsga.problem import Solution
 
@@ -138,6 +139,21 @@ def insertion_mutation(s0: Solution, mutation_probability):
     return Solution(mutated_layout)
 
 def visualize_keyboard(solution):
+    # Remove brackets and newline characters
+    solution = solution.replace('[', '').replace(']', '').replace('\n', ' ')
+
+    # Split the string into a list of strings
+    solution = solution.split()
+
+    # Convert each string element into an integer
+    solution = np.array([int(item) for item in solution])
+
+    alphabet_array = list(string.ascii_uppercase)
+    rearranged = np.full(solution.size, None)
+
+    for i in range(len(solution)):
+        rearranged[i] = alphabet_array[solution[i]]
+
     # Rows based on QWERTY keyboard
     row_indices = [[0, 9], [10, 18], [19, 25]]
     
@@ -146,7 +162,7 @@ def visualize_keyboard(solution):
     # Loop through rows
     for row_number, (row_start, row_end) in enumerate(row_indices):
         for idx in range(row_start, row_end + 1):
-            key = solution[idx]
+            key = rearranged[idx]
             
             # Compute x position
             x = (idx - row_start) + 0.5 * row_number
@@ -168,6 +184,7 @@ def visualize_keyboard(solution):
     ax.axis('off')
     
     plt.show()
+
 
 
 
