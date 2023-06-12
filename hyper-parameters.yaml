@@ -13,7 +13,7 @@ parameters:
   population_size:
     values: [10]
   crossover_fn:
-    values: ['pmx', 'ox', 'cx', 'pmx_tom', 'pmx_lmr']
+    values: ['pmx', 'ox', 'cx', 'pmx_tom', 'pmx_lmr', 'pmx_adjusted_chance']
   selection:
     values: ['tournament', "sequential"]
   crossover_rate:

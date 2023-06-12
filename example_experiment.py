@@ -100,8 +100,9 @@ def setup_ga(seed: int, hyperparameters):
         crossover_fn = crossover_pmx_Tom_lmr;
         indices_gen = lambda: generate_uniform_indices(rng, l, p) # is ignored
     elif method == "pmx_adjusted_chance":
-        crossover_fn = crossover_pmx_Tom_adjusted_chance;
-        indices_gen = None
+        crossoverClass = crossoverChances(rng, "instances/qap/bur26a.dat")
+        crossover_fn = crossoverClass.crossover_pmx_Tom_adjusted_chance;
+        indices_gen = lambda: generate_uniform_indices(rng, l, p) # is ignored
 
     ## Choose mutation function
     mutationMethod = hyperparameters["mutation_fn"]
