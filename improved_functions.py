@@ -1,6 +1,64 @@
 import numpy as np
-
+import random
 from permutationsga.problem import Solution
+from permutationsga.qap import QAP, read_qaplib
+
+def get_specific_p(file):
+    #Read file
+    file = (f".\\instances\\qap\\bur26.dat")
+    _,A,_ =read_qaplib(file)
+    # filename = ('C:\\Users\\User\\Documents\\Evolutionary_algorithms\\EA_tom\\KeyboardEA-Tom\\instances\\qap\\bur26a.dat')
+    
+    #Calculate the mean to see what keys have the largest pressing time on average
+    A_mean= np.mean(A, axis=0)
+    A_p = A_mean/100
+    p_library = {index: value for index, value in enumerate(A_p)}
+
+    return A_p, p_library
+
+
+def crossover_pmx_Tom_adjusted_chance(s0: Solution, s1: Solution):
+    assert s0.e is not None, "Ensure solution s0 is initialized before use."
+    assert s1.e is not None, "Ensure solution s1 is initialized before use."
+
+    #Make a copy of the solution to use for chance assignment
+    copy_s0 = np.copy(s0.e)
+    
+    #Get chance library for specific instance
+    filename = ('C:\\Users\\User\\Documents\\Evolutionary_algorithms\\EA_tom\\KeyboardEA-Tom\\instances\\qap\\bur26a.dat')
+    _ , p_library = get_specific_p(filename)
+
+    #Make a list of chances p for current solution s0
+    p_per_solution = [p_library[key] for key in copy_s0]
+
+    #Determine section to swap
+    swap_or_not = [random.random() < p for p in p_per_solution]
+    section = [index for index, value in enumerate(swap_or_not) if value]
+
+    # Offspring initialization
+    off = np.full(s0.e.size, np.nan)
+
+    subset_p0 = s0.e[section]
+    subset_p1 = s1.e[section]
+
+    # Map of replaced elements
+    to_replace = {key: value for key, value in zip(subset_p0, subset_p1)}
+
+    # Replace elements in offspring using subsets
+    off[section] = subset_p0
+
+    for i in range(len(s0.e)):
+        if i not in section:
+            elem = s1.e[i]
+            while elem in to_replace:
+                elem = to_replace[elem]
+            off[i] = elem
+    
+    # Ensure all values are integers
+    off = off.astype(int)
+    assert len(off) == len(np.unique(off)), "Some numbers appear more than once"
+
+    return [Solution(off)]
 
 def crossover_pmx_Tom(indices, s0: Solution, s1: Solution):
     assert s0.e is not None, "Ensure solution s0 is initialized before use."
