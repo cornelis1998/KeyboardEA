@@ -39,32 +39,36 @@ def crossover_pmx_Tom_lmr(s0: Solution, s1: Solution):
     # Define the keyboard layout as a list for easy indexing.
     keyboard_layout = list('QWERTYUIOPASDFGHJKLZXCVBNM')
 
+    keyboard_sections = []
+
     ## Choose section divider
     # Define the sections left-middle-right.
-    # left_keys = list('QWERASDFZXCV')
-    # middle_keys = list('TYGHBN')
-    # right_keys = list('UIOPJKLM')
+    keyboard_sections.append(list('QWERASDFZXCV'))
+    keyboard_sections.append(list('TYGHBN'))
+    keyboard_sections.append(list('UIOPJKLM'))
 
     # Define the sections toprow-middlerow-bottomrow
-    left_keys = list('QWERTYUIOP')
-    middle_keys = list('ASDFGHJKL')
-    right_keys = list('ZXCVBNM')
+    # keyboard_sections.append(list('QWERTYUIOP'))
+    # keyboard_sections.append(list('ASDFGHJKL'))
+    # keyboard_sections.append(list('ZXCVBNM'))
 
-    # Use list comprehension to create the sections based on the indices in the keyboard layout.
-    left_section = np.array([keyboard_layout.index(key) for key in left_keys])
-    middle_section = np.array([keyboard_layout.index(key) for key in middle_keys])
-    right_section = np.array([keyboard_layout.index(key) for key in right_keys])
+    # Define four sections
+    # keyboard_sections.append(list('QWERASDZX'))
+    # keyboard_sections.append(list('TFGCV'))
+    # keyboard_sections.append(list('YHJBN'))
+    # keyboard_sections.append(list('UIOPKLM'))
 
-    # Combine the sections into a list.
-    keyboard_sections = np.array([left_section, middle_section, right_section], dtype=object)
+    # Create the sections based on the indices in the keyboard layout.
+    for i in range(len(keyboard_sections)):
+        keyboard_sections[i] = np.array([keyboard_layout.index(key) for key in keyboard_sections[i]])
 
-    section = np.random.choice(keyboard_sections)
+    section_idx = np.random.choice(len(keyboard_sections))
+    section = keyboard_sections[section_idx]
 
     # Offspring initialization
     off = np.full(s0.e.size, np.nan)
 
     # Get parents subsets according to given indices
-    section = np.random.choice(keyboard_sections)
     subset_p0 = s0.e[section]
     subset_p1 = s1.e[section]
 
@@ -88,7 +92,6 @@ def crossover_pmx_Tom_lmr(s0: Solution, s1: Solution):
     return [Solution(off)]
 
 def swap_mutation(s0: Solution, mutation_probability):
-    # Copy the original layout.
     mutated_layout = np.copy(s0.e)
 
     # Perform mutation.
@@ -115,14 +118,13 @@ def scramble_mutation(s0: Solution, mutation_probability):
     return Solution(mutated_layout)
 
 def insertion_mutation(s0: Solution, mutation_probability):
-    # Copy the original layout.
     mutated_layout = np.copy(s0.e)
 
     # Perform mutation.
     if np.random.random() < mutation_probability:
         # Select two random indices.
         idx1, idx2 = np.random.choice(len(s0.e), 2, replace=False)
-        # Remove the element at idx1 and insert it at idx2
+        # Insert and shift
         value_to_insert = mutated_layout[idx1]
         mutated_layout = np.delete(mutated_layout, idx1)
         mutated_layout = np.insert(mutated_layout, idx2, value_to_insert)

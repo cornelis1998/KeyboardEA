@@ -70,10 +70,10 @@ def setup_ga(seed: int, inst):
     crossover_fn = crossover_pmx_Tom_lmr; indices_gen = None
 
     ## Choose mutation function
-    # mutation_fn = swap_mutation
+    mutation_fn = swap_mutation
     # mutation_fn = scramble_mutation
     # mutation_fn = insertion_mutation
-    mutation_fn = None
+    # mutation_fn = None
 
     initialization = RandomPermutationInitialization(l) 
     parent_selection = SequentialSelector()
