@@ -2,7 +2,8 @@ import numpy as np
 
 from permutationsga.problem import Solution
 
-def crossover_pmx_Tom(indices, s0: Solution, s1: Solution):
+# Partially Mapped Crossover with Random Sections and a Single Output Offspring
+def crossover_pmx_so(indices, s0: Solution, s1: Solution):
     assert s0.e is not None, "Ensure solution s0 is initialized before use."
     assert s1.e is not None, "Ensure solution s1 is initialized before use."
 
@@ -32,7 +33,8 @@ def crossover_pmx_Tom(indices, s0: Solution, s1: Solution):
 
     return [Solution(off)]
 
-def crossover_pmx_Tom_lmr(s0: Solution, s1: Solution):
+# Partially Mapped Crossover with Predifined Sections
+def crossover_pmx_ps(s0: Solution, s1: Solution):
     assert s0.e is not None, "Ensure solution s0 is initialized before use."
     assert s1.e is not None, "Ensure solution s1 is initialized before use."
 

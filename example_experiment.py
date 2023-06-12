@@ -66,8 +66,8 @@ def setup_ga(seed: int, inst):
 
     ## Choose crossover function
     # crossover_fn = crossover_pmx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
-    # crossover_fn = crossover_pmx_Tom; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
-    crossover_fn = crossover_pmx_Tom_lmr; indices_gen = None
+    # crossover_fn = crossover_pmx_so; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
+    crossover_fn = crossover_pmx_ps; indices_gen = None
 
     ## Choose mutation function
     mutation_fn = swap_mutation
