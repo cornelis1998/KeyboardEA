@@ -480,7 +480,7 @@ class ConfigurableGA:
         offspring = self.recombinator.recombine(self.rng, self.population)
         for solution in offspring:
             if self.mutation_fn is not None:
-                solution = self.mutation_fn(solution, 0.1)
+                solution = self.mutation_fn(solution, 0.001)
             self.problem.evaluate(solution)
 
         self.population = self.selection.select(self.rng, offspring, len(self.population))
