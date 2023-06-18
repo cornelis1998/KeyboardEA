@@ -1,11 +1,32 @@
-# Solutions
+# Keyboard Layout Optimization using Evolutionary Algorithms
+In this project, a method for keyboard layout optimization is discussed. We have recieved a base method from the TU Delft Course, and were asked to analyse the results and improve them somehow. We have tried a few different approaches. These approaches are explained in our paper. All of the added functions can be found in the `new_fns.py` file. 
+
+## Initialization methods
+We have tried a few new initialization methods. `QWERTYRandom`, `AZERTYRandom`, `ColemakRandom` and `DvorakRandom` all create an initial population with keyboards that are based on those popular layouts. The class `QwertyPermutationInitialization` also creates a random initial population based on QWERTY and AZERTY layouts. 
+
+Another initialization class was added that creates an initial layout population where the most used keys are on the middle row. This one is called `BetterPermutationInitialization`, although the results were worse.
+
+The initialization classes can be used in the same way as the given `RandomPermutationInitialization` class. There are some arguments added to the functions of some classes.
+
+## Crossover and mutation functions
+A few new improved crossover pmx functions were written. First, one that creates only one child: `crossover_pmx_single_off`. Secondly, two variations called `crossover_pmx_predef_secs` and `crossover_pmx_adjusted_chance`. Three new implementations of swap, scramble and insertion mutation can also be found here. The results of these functions can be found in our paper.
+
+## Visualization
+The last thing we have written is a piece of code that can visualize the found keyboard layouts. This is used by the function `visualize_keyboard`. 
+
+## Solutions
 By running best_found_GA.py we produced the final results as presented in our paper.
 Modifying the setup_ga function allows for running the experiment with other settings.
 
 To run the hyper-parameter sweep, see the bigger_sweep branch in this repostiory.
 Here we have a setup that allows for quickly searching the optimal parameters for the GA
 
-For more details, see our paper.
+For more details, see our paper.
+
+
+
+# TU Delft Documentation
+The basis of this project was given as a starting point. The documentation below is the project discription as it was shared on Brightspace.
 
 ## EA-Course - Permutations
 When using Evolutionary Algorithms, one particularly important aspect of applying such an EA is the choice of **encoding**. In many cases the encoding used is trivial, for example a mapping from positions on a discrete string to the variables used within evaluation, or similarly for continuous variables. Such encodings are commonplace, and you have already (potentially unknowingly) encountered them.
