@@ -1,5 +1,11 @@
-##
-Toms branch
+# Solutions
+By running best_found_GA.py we produced the final results as presented in our paper.
+Modifying the setup_ga function allows for running the experiment with other settings.
+
+To run the hyper-parameter sweep, see the bigger_sweep branch in this repostiory.
+Here we have a setup that allows for quickly searching the optimal parameters for the GA
+
+For more details, see our paper.
 
 ## EA-Course - Permutations
 When using Evolutionary Algorithms, one particularly important aspect of applying such an EA is the choice of **encoding**. In many cases the encoding used is trivial, for example a mapping from positions on a discrete string to the variables used within evaluation, or similarly for continuous variables. Such encodings are commonplace, and you have already (potentially unknowingly) encountered them.
