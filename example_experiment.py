@@ -32,7 +32,7 @@ from permutationsga.problem import (
     ElitistTracker,
 )
 
-from improved_functions import *
+from new_fns import *
 
 from permutationsga.tsp import TSP
 from permutationsga.qap import QAP, read_qaplib
@@ -66,8 +66,8 @@ def setup_ga(seed: int, inst):
 
     ## Choose crossover function
     # crossover_fn = crossover_pmx; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
-    # crossover_fn = crossover_pmx_so; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
-    crossover_fn = crossover_pmx_ps; indices_gen = None
+    # crossover_fn = crossover_pmx_single_off; indices_gen = lambda: generate_uniform_indices(rng, l, 0.5)
+    crossover_fn = crossover_pmx_predef_secs; indices_gen = None
 
     ## Choose mutation function
     mutation_fn = swap_mutation

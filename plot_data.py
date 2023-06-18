@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from new_fns import visualize_keyboard
 
-instances = ['a']
+instances = ['a', 'b']
 
 for inst in instances:
     # PLot results

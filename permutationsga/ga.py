@@ -7,7 +7,7 @@ from typing import List, Union
 import numpy.typing as npt
 
 from .problem import Problem, Solution
-from improved_functions import *
+from new_fns import *
 
 class Initialization:
     def initialize(self, rng: np.random.Generator, population: List[Solution]):
