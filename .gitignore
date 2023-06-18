@@ -547,3 +547,6 @@ $RECYCLE.BIN/
 
 instances/*
 test.py
+.vscode
+*.ipynb
+

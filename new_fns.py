@@ -370,7 +370,7 @@ def visualize_keyboard(solution):
     rearranged = np.full(solution.size, None)
 
     for i in range(len(solution)):
-        rearranged[i] = alphabet_array[(solution[i]-1)]
+        rearranged[i] = alphabet_array[(solution[i])]
 
     # Rows based on QWERTY keyboard
     row_indices = [[0, 9], [10, 18], [19, 25]]

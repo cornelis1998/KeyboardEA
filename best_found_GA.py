@@ -65,7 +65,7 @@ def setup_ga(seed: int, inst):
 
     return problem_tracker, ga
 
-instances = ['a']
+instances = ['a', 'b']
 
 for inst in instances:
     dfs = []

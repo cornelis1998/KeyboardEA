@@ -27,7 +27,7 @@ for inst in instances:
 
     min_idx = resampled_data[resampled_data["fitness"] == resampled_data["fitness"].min()].iloc[-1]
     print(f'Printing visual for solution: {min_idx["genotype"]}')
-    # visualize_keyboard(min_idx["genotype"])
+    visualize_keyboard(min_idx["genotype"])
 
     sns.lineplot(data=resampled_data, x="#evaluations", y="fitness", errorbar=("pi", 95))
-    # plt.show()
+    plt.show()
